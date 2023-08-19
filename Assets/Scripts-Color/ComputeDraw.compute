@@ -1,0 +1,65 @@
+// Each #kernel tells which function to compile; you can have many kernels
+#pragma kernel Draw
+#pragma kernel Clear
+
+// Create a RenderTexture with enableRandomWrite flag and set it
+// with cs.SetTexture
+
+RWTexture2D<float4> Result;
+
+float4 color = float4(1,1,1,1);
+float4 clearColor = float4(0.5,0.5,0.5,1);
+float2 uv;
+float2 scale;
+float radius = 0.1f;
+int resolution = 100;
+
+//Modifies red -> temp value
+// 32x16 | 32x16 | 1x1 -> Good for 400
+// 32x32 | 32x32 | 1x1 -> Good for 1000
+
+// id = uv * scale * resolution
+// uv = 
+
+[numthreads(32,32,1)]
+void Draw (uint3 id : SV_DispatchThreadID)
+{
+    // Return if thread is outside of working domain
+    if
+    (
+        id.x >= (uint)(scale.x * resolution) ||
+        id.y >= (uint)(scale.y * resolution)
+    ) return;
+
+    // Local Position of a texel
+    float2 pos = uv * scale;
+
+    // Local Position of a thread
+    float2 curr = (float2)id.xy / resolution;
+
+    // Coordinate of a texel;
+    // int2 coord;
+    // coord.x = (int)(uv.x * scale.x * resolution);
+    // coord.y = (int)(uv.y * scale.y * resolution);
+
+    // Update result
+    float4 currColor = Result[id.xy];
+    if(distance(curr, pos) <= radius)
+    {
+        currColor = color;
+    }
+    Result[id.xy] = currColor;
+};
+
+[numthreads(32,32,1)]
+void Clear (uint3 id : SV_DispatchThreadID)
+{
+    // Return if thread is outside of working domain
+    if
+    (
+        id.x >= (uint)(scale.x * resolution) ||
+        id.y >= (uint)(scale.y * resolution)
+    ) return;
+
+    Result[id.xy] = clearColor;
+};
