@@ -1,25 +1,102 @@
 // Each #kernel tells which function to compile; you can have many kernels
 #pragma kernel Draw
 #pragma kernel Clear
+#pragma kernel Erase
 
 // Create a RenderTexture with enableRandomWrite flag and set it
 // with cs.SetTexture
 
+struct ColorCountStruct
+{
+    int Red;
+    int Green;
+    int Blue;
+    int Yellow;
+    int Cyan;
+    int Magenta;
+    int White;
+};
+
+RWStructuredBuffer<ColorCountStruct> ColorCountBuffer;
 RWTexture2D<float4> Result;
 
+// Color used for Drawing
 float4 color = float4(1,1,1,1);
+// Neutral color used to clear surface
 float4 clearColor = float4(0.5,0.5,0.5,1);
+// Coordinate of Drawing position
 float2 uv;
+// Scale of a surface
 float2 scale;
+// Radius of a Drawing
 float radius = 0.1f;
+// Number of chunks per 1m
 int resolution = 100;
 
-//Modifies red -> temp value
+// Modifies red -> temp value
 // 32x16 | 32x16 | 1x1 -> Good for 400
 // 32x32 | 32x32 | 1x1 -> Good for 1000
 
 // id = uv * scale * resolution
-// uv = 
+
+static const int Red    = 1 << 0;
+static const int Green  = 1 << 1;
+static const int Blue   = 1 << 2;
+
+int ToColCode(in float4 col)
+{
+    int colCode = 0;
+    if(col.r == 1.0) colCode |= 1;
+    if(col.g == 1.0) colCode |= 2;
+    if(col.b == 1.0) colCode |= 4;
+    return colCode;
+}
+
+void DecrementColor(in float4 col)
+{
+    int colCode = ToColCode(col);
+    switch(colCode)
+    {
+        case Red:
+        {
+            InterlockedAdd(ColorCountBuffer[0].Red, -1);
+            break;
+        }
+        case Green:
+        {
+            InterlockedAdd(ColorCountBuffer[0].Green, -1);
+            break;
+        }
+        case Blue:
+        {
+            InterlockedAdd(ColorCountBuffer[0].Blue, -1);
+            break;
+        }
+    }
+}
+
+void IncrementColor(in float4 col)
+{
+    int colCode = ToColCode(col);
+    switch(colCode)
+    {
+        case Red:
+        {
+            InterlockedAdd(ColorCountBuffer[0].Red, 1);
+            break;
+        }
+        case Green:
+        {
+            InterlockedAdd(ColorCountBuffer[0].Green, 1);
+            break;
+        }
+        case Blue:
+        {
+            InterlockedAdd(ColorCountBuffer[0].Blue, 1);
+            break;
+        }
+    }
+}
 
 [numthreads(32,32,1)]
 void Draw (uint3 id : SV_DispatchThreadID)
@@ -37,17 +114,14 @@ void Draw (uint3 id : SV_DispatchThreadID)
     // Local Position of a thread
     float2 curr = (float2)id.xy / resolution;
 
-    // Coordinate of a texel;
-    // int2 coord;
-    // coord.x = (int)(uv.x * scale.x * resolution);
-    // coord.y = (int)(uv.y * scale.y * resolution);
-
     // Update result
     float4 currColor = Result[id.xy];
+    DecrementColor(currColor);
     if(distance(curr, pos) <= radius)
     {
         currColor = color;
     }
+    IncrementColor(currColor);
     Result[id.xy] = currColor;
 };
 
@@ -62,4 +136,30 @@ void Clear (uint3 id : SV_DispatchThreadID)
     ) return;
 
     Result[id.xy] = clearColor;
+};
+
+[numthreads(32,32,1)]
+void Erase (uint3 id : SV_DispatchThreadID)
+{
+    // Return if thread is outside of working domain
+    if
+    (
+        id.x >= (uint)(scale.x * resolution) ||
+        id.y >= (uint)(scale.y * resolution)
+    ) return;
+
+    // Local Position of a texel
+    float2 pos = uv * scale;
+
+    // Local Position of a thread
+    float2 curr = (float2)id.xy / resolution;
+
+    // Update result
+    float4 currColor = Result[id.xy];
+    if(distance(curr, pos) <= radius)
+    {
+        DecrementColor(currColor);
+        currColor = clearColor;
+    }
+    Result[id.xy] = currColor;
 };
