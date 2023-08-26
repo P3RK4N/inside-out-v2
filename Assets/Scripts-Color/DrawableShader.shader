@@ -6,6 +6,7 @@ Shader "Example/DrawableShader"
     Properties
     {
         [MainTexture] _BaseMap("Main Texture", 2D) = "gray"
+        _SpecularMap("Specular Map", 2D) = "black"
     }
 
     SubShader
@@ -34,15 +35,18 @@ Shader "Example/DrawableShader"
             {
                 float3 normalWS : TEXCOORD0;
                 float3 positionWS : TEXCOORD1;
-                float2 UV : TEXCOORD2;
+                float2 BaseMapUV : TEXCOORD2;
+                float2 SpecularMapUV : TEXCOORD3;
                 float4 positionCS : SV_POSITION;
             };
 
 
             TEXTURE2D(_BaseMap); SAMPLER(sampler_BaseMap);
+            TEXTURE2D(_SpecularMap); SAMPLER(sampler_SpecularMap);
 
             CBUFFER_START(UnityPerMaterial)
                 float4 _BaseMap_ST;
+                float4 _SpecularMap_ST;
             CBUFFER_END
 
             Varyings vert(Attributes IN)
@@ -51,25 +55,48 @@ Shader "Example/DrawableShader"
 
                 OUT.positionCS = TransformObjectToHClip(IN.positionOS);
                 OUT.positionWS = TransformObjectToWorld(IN.positionOS);
-                OUT.UV = TRANSFORM_TEX(IN.UV, _BaseMap);
-                OUT.normalWS = TransformObjectToWorld(IN.normalOS);
-
+                OUT.BaseMapUV = TRANSFORM_TEX(IN.UV, _BaseMap);
+                OUT.SpecularMapUV = TRANSFORM_TEX(IN.UV, _SpecularMap);
+                OUT.normalWS = TransformObjectToWorldDir(IN.normalOS);
+                
                return OUT;
             }
 
             half4 frag(Varyings IN) : SV_Target
             {
                 Light light = GetMainLight();
-                float3 cameraWS = GetCameraPositionWS();     
-                float3 halfVector = normalize(cameraWS - IN.positionWS);
 
-                float4 texSample = SAMPLE_TEXTURE2D(_BaseMap, sampler_BaseMap, IN.UV);
+                float3 diffuseColor = SAMPLE_TEXTURE2D(_BaseMap, sampler_BaseMap, IN.BaseMapUV);
+                float3 specularColor = SAMPLE_TEXTURE2D(_SpecularMap, sampler_SpecularMap, IN.SpecularMapUV);
+                specularColor = specularColor.r * light.color;
 
-                float ndotl = dot(IN.normalWS, light.direction);
-                float ndoth = dot(halfVector, IN.normalWS);
-                float4 litCoefficient = lit(ndotl, ndoth, 32);
+                float shininess = 32.0;
 
-                return half4(texSample.xyz, 1.0);
+                float3 cameraPos = GetCameraPositionWS();
+                float3 lightDir = light.direction;
+
+                // Calculate normalized view direction
+                float3 viewDir = normalize(cameraPos - IN.positionWS);
+
+                // Calculate halfway vector
+                float3 halfVector = normalize(lightDir + viewDir);
+
+                // Calculate diffuse term
+                float diffuseFactor = max(0.0, dot(IN.normalWS, lightDir));
+                float3 diffuse = diffuseColor * diffuseFactor;
+
+                // Calculate specular term
+                float specularFactor = pow(max(0.0, dot(IN.normalWS, halfVector)), shininess);
+                float3 specular = specularColor * specularFactor;
+
+                // Final lighting calculation
+                float3 finalColor = diffuse + specular;
+
+                // Optionally, add ambient term
+                float3 ambientColor = float3(0.1, 0.1, 0.1); // Adjust as needed
+                finalColor += ambientColor;
+
+                return half4(finalColor, 1.0);
             }
             ENDHLSL
         }
