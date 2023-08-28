@@ -23,15 +23,18 @@ EditorBuildSettings:
   - enabled: 0
     path: Assets/Vendor/BNG Framework/Scenes/Quest Demo.unity
     guid: eac0312c32df12949a47d07747a9d1cd
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/Main Menu.unity
     guid: 0831f8c7e1c84ac47a07c6b0f80d9c43
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/Sandbox.unity
     guid: 00c27ed76ff310340933dadacdccd162
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/Quiz.unity
     guid: 1d028c39eef2def4c9e07a09a9110678
+  - enabled: 1
+    path: Assets/Scenes/Colors/Colors.unity
+    guid: f716f7b96c8f4c24c974e86b602e8160
   m_configObjects:
     Unity.XR.Oculus.Settings: {fileID: 11400000, guid: 3936f1099fb7cde46b436a5a1b3346e2,
       type: 2}

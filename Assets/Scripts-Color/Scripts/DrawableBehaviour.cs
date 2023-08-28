@@ -1,21 +1,10 @@
 using System.Collections;
 using System.Collections.Generic;
-using TMPro;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Assertions;
-using UnityEngine.Pool;
 using System.Linq;
-using UnityEngine.InputSystem;
-using UnityEngine.XR;
-using Microsoft.SqlServer.Server;
-using System.Runtime.InteropServices;
-using UnityEngine.InputSystem.LowLevel;
-using System.Runtime.Remoting.Messaging;
-using UnityEngine.Rendering;
-using UnityEngine.UIElements;
-using Unity.VisualScripting.ReorderableList.Element_Adder_Menu;
-using System.ComponentModel;
+using UnityEngine.Experimental.Rendering.RenderGraphModule;
+using Unity.VisualScripting;
 
 /// <summary>
 /// Color indices
@@ -66,6 +55,17 @@ public class DrawableBehaviour : MonoBehaviour
     /// Plane is by default 10x10 meters
     /// </summary>
     public static readonly float PLANE_FACTOR = 10.0f;
+
+    /// <summary>
+    /// Factor of sampler scaling based on local scale of drawable object.
+    /// </summary>
+    public static readonly float SCALE_FACTOR = PLANE_FACTOR / 2.0f;
+
+    /// <summary>
+    /// Margin of collider borders measured in meters. 
+    /// This is used to properly register spraying on borders.
+    /// </summary>
+    public static readonly float COLLIDER_MARGIN = 0.5f;
 
     /// <summary>
     /// Number of colors used
@@ -122,6 +122,8 @@ public class DrawableBehaviour : MonoBehaviour
     RenderTexture coatTexture;
 
     public static ColorIndex colorIndex;
+
+    Vector2 colliderScale;
 
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterAssembliesLoaded)]
     private static void LoadStaticAssets()
@@ -182,6 +184,7 @@ public class DrawableBehaviour : MonoBehaviour
         r.material.SetTexture("_BaseMap", drawTexture);
         r.material.SetTexture("_CoatMap", coatTexture);
         r.material.SetColor("_ClearColor", clearColor);
+        r.material.SetVector("_Scale", new Vector2(tf.localScale.x, tf.localScale.y) * SCALE_FACTOR);
 
         // Compute shader init
         drawShader = Instantiate(drawShaderTemplate);
@@ -211,6 +214,17 @@ public class DrawableBehaviour : MonoBehaviour
         drawShader.SetFloats("scale", new float[]{ PLANE_FACTOR * tf.localScale.x, PLANE_FACTOR * tf.localScale.z });
 
         drawShader.Dispatch(1, 32, 32, 1);
+
+        // Reshape SprayColor collider
+        float surfaceX = PLANE_FACTOR * tf.localScale.x;
+        float surfaceY = PLANE_FACTOR * tf.localScale.z;
+
+        float colliderX = surfaceX + COLLIDER_MARGIN;
+        float colliderY = surfaceY + COLLIDER_MARGIN;
+
+        colliderScale = new Vector2(colliderX / surfaceX, colliderY / surfaceY);
+
+        tf.Find("Collider").localScale = new Vector3(colliderScale.x, 1, colliderScale.y);
     }
 
     void Update()
@@ -236,14 +250,24 @@ public class DrawableBehaviour : MonoBehaviour
     }
 
     /// <summary>
+    /// Transforms UV from collider to draw surface space.
+    /// </summary>
+    /// <param name="colliderUV"></param>
+    void calculateSprayUV(ref Vector2 uv)
+    {
+        uv -= new Vector2(0.5f, 0.5f);
+        uv *= colliderScale;
+        uv += new Vector2(0.5f, 0.5f);
+    }
+
+    /// <summary>
     /// Draws on a color texture attached to this mesh
     /// </summary>
     /// <param name="uv">Coordinates of place where to draw</param>
     /// <param name="radius">Radius of drawing in meters.</param>
     public void Draw(Color c, Vector2 uv, float radius = 0.1f)
     {
-        uv -= new Vector2(0.25f, 0.25f);
-        uv *= 2.0f;
+        calculateSprayUV(ref uv);
 
         drawShader.SetFloat("radius", radius);
         drawShader.SetFloats("uv", new float[]{ uv.x, uv.y });
@@ -260,8 +284,7 @@ public class DrawableBehaviour : MonoBehaviour
     /// <param name="radius">Radius of drawing in meters.</param>
     public void Coat(Color c, Vector2 uv, float radius = 0.1f)
     {
-        uv -= new Vector2(0.25f, 0.25f);
-        uv *= 2.0f;
+        calculateSprayUV(ref uv);
 
         drawShader.SetFloat("radius", radius);
         drawShader.SetFloats("uv", new float[]{ uv.x, uv.y });

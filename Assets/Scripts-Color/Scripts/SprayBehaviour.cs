@@ -42,11 +42,16 @@ public class SprayBehaviour : MonoBehaviour
     public float radius = 0.2f;
     public float delay = 0.1f;
 
+    public AudioClip sprayCanCollideSound;
+    public float sprayCanCollideSoundMinImpact = 1.0f;
+
+
     static readonly float Height = 0.565f;
     bool isCoat = false;
 
     Transform sprayDir;
     ParticleSystem ps;
+    AudioSource sprayCanSound;
     Grabbable grab;
 
     // Start is called before the first frame update
@@ -56,6 +61,7 @@ public class SprayBehaviour : MonoBehaviour
         var emitter = Instantiate(sprayEmitter, sprayDir);
         ps = emitter.GetComponent<ParticleSystem>();
         grab = GetComponent<BNG.Grabbable>();
+        sprayCanSound = GetComponent<AudioSource>();
 
         if(type == SprayType.xRed || type == SprayType.xGreen || type == SprayType.xBlue)
         {
@@ -74,15 +80,19 @@ public class SprayBehaviour : MonoBehaviour
     }
 
     // Update is called once per frame
+
+    static RaycastHit[] HitInfos = new RaycastHit[5];
     void Update()
     {
         if(ps.isStopped && grab.BeingHeld && Input.GetMouseButtonDown((int)MouseButton.Left))
         {
             ps.Play();
+            sprayCanSound.Play();
         }
         else if(ps.isPlaying && (!grab.BeingHeld || Input.GetMouseButtonUp((int)MouseButton.Left)))
         {
             ps.Stop();
+            sprayCanSound.Stop();
         }
 
         if(ps.isPlaying)
@@ -90,14 +100,16 @@ public class SprayBehaviour : MonoBehaviour
             // Draw with mouse
             if(Input.GetMouseButton((int)MouseButton.Left))
             {
-                if(Physics.Raycast(sprayDir.position, sprayDir.right, out RaycastHit info, reach, 1 << LayerMask.NameToLayer("Drawable")))
+                int hits = Physics.RaycastNonAlloc(sprayDir.position, sprayDir.right, HitInfos, reach, 1 << LayerMask.NameToLayer("Drawable"));
+
+                for(int i = 0; i < hits; i++)
                 {
-                    var collider = info.collider;
+                    var collider = HitInfos[i].collider;
                     var drawable = collider.GetComponentInParent<DrawableBehaviour>();
                     if(drawable == null) return;
 
 
-                    StartCoroutine(isCoat ? delayedCoat(drawable, info.textureCoord) : delayedDraw(drawable, info.textureCoord));
+                    StartCoroutine(isCoat ? delayedCoat(drawable, HitInfos[i].textureCoord) : delayedDraw(drawable, HitInfos[i].textureCoord));
                 }
             }
         }
@@ -113,6 +125,21 @@ public class SprayBehaviour : MonoBehaviour
     {
         yield return new WaitForSeconds(delay);
         drawable.Coat(colors[(int)type-1], texCoord, radius);
+    }
+
+    void OnCollisionEnter(Collision other)
+    {
+        float power = other.impulse.sqrMagnitude;
+
+        if(power < sprayCanCollideSoundMinImpact) return;
+
+        var clampedPower = Mathf.Clamp(power, sprayCanCollideSoundMinImpact, 8);
+        AudioSource.PlayClipAtPoint
+        (
+            sprayCanCollideSound, 
+            transform.position, 
+            (clampedPower-sprayCanCollideSoundMinImpact)/(8-sprayCanCollideSoundMinImpact)
+        );
     }
 
 }

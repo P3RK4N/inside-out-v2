@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEditor.SceneManagement;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using TMPro;
 
@@ -85,7 +85,7 @@ public class MainMenu : MonoBehaviour
             yield return new WaitForEndOfFrame();
         }
 
-        EditorSceneManager.LoadScene("Sandbox");
+        SceneManager.LoadScene("Sandbox");
     }
 
     IEnumerator onQuiz() 
@@ -102,7 +102,7 @@ public class MainMenu : MonoBehaviour
             yield return new WaitForEndOfFrame();
         }
 
-        EditorSceneManager.LoadScene("Quiz");
+        SceneManager.LoadScene("Quiz");
     }
 
     void onSettings() 
