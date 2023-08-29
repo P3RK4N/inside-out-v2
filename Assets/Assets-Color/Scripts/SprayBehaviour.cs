@@ -76,7 +76,7 @@ public class SprayBehaviour : MonoBehaviour
     Transform sprayDir;
     ParticleSystem ps;
     AudioSource sprayCanSound;
-    Grabbable grab;
+    public Grabbable grab { get; private set; }
     TMP_Text sprayStat;
     Transform canvasJoint;
 
