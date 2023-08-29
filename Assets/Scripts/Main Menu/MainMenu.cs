@@ -26,7 +26,7 @@ public class MainMenu : MonoBehaviour
     [SerializeField] TMP_Text Credits;
     [Space]
     [SerializeField] GameObject Volume; 
-    [SerializeField] GameObject Language;
+    // [SerializeField] GameObject Language;
     
     public static MainMenu Instance;
 
@@ -51,10 +51,10 @@ public class MainMenu : MonoBehaviour
 
         Volume.GetComponentInChildren<Slider>().value = AudioListener.volume;
         Volume.GetComponentInChildren<Slider>().onValueChanged.AddListener((call) => AudioListener.volume = call);
-        Language.GetComponentInChildren<Button>().onClick.AddListener(() => { onAnyButtonClick(); onLang();});
+        // Language.GetComponentInChildren<Button>().onClick.AddListener(() => { onAnyButtonClick(); onLang();});
 
-        PersistentData pd = Serializer.Load();
-        if(pd == null || !pd.storyCompleted) QuizButton.interactable = false;
+        // PersistentData pd = Serializer.Load();
+        // if(pd == null || !pd.storyCompleted) QuizButton.interactable = false;
         
         StartCoroutine(lateStart());
     }
@@ -85,7 +85,7 @@ public class MainMenu : MonoBehaviour
             yield return new WaitForEndOfFrame();
         }
 
-        SceneManager.LoadScene("Sandbox");
+        SceneManager.LoadScene("Colors");
     }
 
     IEnumerator onQuiz() 
@@ -102,7 +102,7 @@ public class MainMenu : MonoBehaviour
             yield return new WaitForEndOfFrame();
         }
 
-        SceneManager.LoadScene("Quiz");
+        SceneManager.LoadScene("ColorsQuiz");
     }
 
     void onSettings() 
@@ -117,7 +117,7 @@ public class MainMenu : MonoBehaviour
         BackButton.gameObject.SetActive(true);
         Credits.gameObject.SetActive(false);
         Volume.SetActive(true);
-        Language.gameObject.SetActive(true);
+        // Language.gameObject.SetActive(true);
 
     }
 
@@ -138,7 +138,7 @@ public class MainMenu : MonoBehaviour
 
     void onBack() 
     {
-        Title.text = "InsideOut";
+        Title.text = "Colors";
 
         PlayButton.gameObject.SetActive(true);
         QuizButton.gameObject.SetActive(true);
@@ -148,7 +148,7 @@ public class MainMenu : MonoBehaviour
         BackButton.gameObject.SetActive(false);
         Credits.gameObject.SetActive(false);
         Volume.SetActive(false);
-        Language.gameObject.SetActive(false);
+        // Language.gameObject.SetActive(false);
 
     }
 
@@ -180,7 +180,7 @@ public class MainMenu : MonoBehaviour
     {
         Title.text = 
             PlayButton.gameObject.activeInHierarchy ? 
-                "InsideOut" : 
+                "Colors" : 
                 Volume.gameObject.activeInHierarchy ? 
                     Loc.loc(new string[]{ "Settings", "Postavke" }) : 
                     Loc.loc(new string[]{ "Credits", "Zasluge" });
@@ -193,7 +193,7 @@ public class MainMenu : MonoBehaviour
         Loc.locChild(QuizButton, MainMenuTxt.Quiz);
         Loc.locChild(BackButton, MainMenuTxt.Back);
         Loc.locChild(ExitButton, MainMenuTxt.Exit);
-        Language.GetComponentInChildren<TMP_Text>().text = Loc.loc(MainMenuTxt.Language);
-        Loc.locChild(Language.GetComponentInChildren<Button>(), Loc.loc());
+        // Language.GetComponentInChildren<TMP_Text>().text = Loc.loc(MainMenuTxt.Language);
+        // Loc.locChild(Language.GetComponentInChildren<Button>(), Loc.loc());
     }
 }

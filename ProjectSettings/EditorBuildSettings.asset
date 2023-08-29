@@ -33,7 +33,13 @@ EditorBuildSettings:
     path: Assets/Scenes/Quiz.unity
     guid: 1d028c39eef2def4c9e07a09a9110678
   - enabled: 1
-    path: Assets/Scenes/Colors/Colors.unity
+    path: Assets/Assets-Color/Scenes/ColorsMenu.unity
+    guid: 7707b8d8af48ab049a0cdf3e0ccd9371
+  - enabled: 1
+    path: Assets/Assets-Color/Scenes/ColorsQuiz.unity
+    guid: 6e94e6cec0c6bcf47bed11ba2d1a6785
+  - enabled: 1
+    path: Assets/Assets-Color/Scenes/Colors.unity
     guid: f716f7b96c8f4c24c974e86b602e8160
   m_configObjects:
     Unity.XR.Oculus.Settings: {fileID: 11400000, guid: 3936f1099fb7cde46b436a5a1b3346e2,

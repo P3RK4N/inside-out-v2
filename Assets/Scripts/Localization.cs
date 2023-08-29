@@ -124,27 +124,15 @@ namespace Localization
         public static string[] CreditsText =
         {
             @"Students:
-Marin Petric
 Bruno Perković
-Branimir Tomeljak
-Josipa Markić
-Sven Leko
 
 Mentors:
-Mirko Sužnjević
-Lea Skorin-Kapov
-Maja Matijašević",
+Mirko Sužnjević",
             @"Studenti:
-Marin Petric
 Bruno Perković
-Branimir Tomeljak
-Josipa Markić
-Sven Leko
 
 Mentori:
-Mirko Sužnjević
-Lea Skorin-Kapov
-Maja Matijašević"
+Mirko Sužnjević"
         };
     }
 
