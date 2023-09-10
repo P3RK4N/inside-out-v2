@@ -221,6 +221,8 @@ public class SprayBehaviour : MonoBehaviour
 
     void OnCollisionEnter(Collision other)
     {
+        if(sprayCanCollideSound == null) return;
+        
         float power = other.impulse.sqrMagnitude;
 
         if(power < sprayCanCollideSoundMinImpact) return;

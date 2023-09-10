@@ -31,7 +31,6 @@ public class SprayTask : MonoBehaviour
     // Start is called before the first frame update
     void Awake()
     {
-        return;
         // Validate tasks
         foreach(var task in tasks)
         {

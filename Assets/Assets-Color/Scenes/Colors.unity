@@ -3071,7 +3071,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 254613515}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 625f7b78688e7414fa23a9b6ec9110ac, type: 3}
   m_Name: 
@@ -3090,16 +3090,16 @@ MonoBehaviour:
     - 0
     - 0
     allowedTypes: 00000000020000000400000001000000
-  - name: Bojanje sekundarnim bojama
+  - name: "Aditivnost - \u017Duta boja"
     amounts:
     - 0
     - 0
     - 0
     - 1
-    - 1
-    - 1
     - 0
-    allowedTypes: 0600000008000000070000000500000009000000
+    - 0
+    - 0
+    allowedTypes: 080000000700000005000000000000000200000004000000
   - name: Suptrakcija 1 boje
     amounts:
     - 0
@@ -3120,6 +3120,26 @@ MonoBehaviour:
     - 0
     - 0
     allowedTypes: 090000000100000005000000030000000b000000
+  - name: Aditivnost i suptraktivnost 1
+    amounts:
+    - 0
+    - 0
+    - 0
+    - 0.5
+    - 0
+    - 0
+    - 0
+    allowedTypes: 0800000005000000000000000a0000000b000000
+  - name: Aditivnost i suptraktivnost 2
+    amounts:
+    - 0.5
+    - 0.5
+    - 0.5
+    - 0.5
+    - 0.5
+    - 0.5
+    - 0.5
+    allowedTypes: 060000000100000003000000040000000b000000
 --- !u!1001 &258579877
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -28518,6 +28538,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 3145639531258447820, guid: 878358266028a064b98694a5656354ee,
+        type: 3}
+      propertyPath: playOnAwake
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 3145639531277694056, guid: 878358266028a064b98694a5656354ee,
         type: 3}
       propertyPath: m_Name
@@ -28536,7 +28561,7 @@ PrefabInstance:
     - target: {fileID: 3145639531277918776, guid: 878358266028a064b98694a5656354ee,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0
+      value: -0.557
       objectReference: {fileID: 0}
     - target: {fileID: 3145639531277918776, guid: 878358266028a064b98694a5656354ee,
         type: 3}
