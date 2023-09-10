@@ -1,17 +1,23 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.Remoting.Metadata.W3cXsd2001;
+using TMPro;
 using UnityEngine;
 using UnityEngine.Assertions;
 
 [DefaultExecutionOrder(1)]
 public class SprayTask : MonoBehaviour
 {
+    [SerializeField] GameObject vanishFX;
+    [SerializeField] AudioClip successSFX;
+
     SprayBehaviour[] sprays;
     Dictionary<SprayBehaviour, Vector3> spray2Position = new Dictionary<SprayBehaviour, Vector3>();
 
     [System.Serializable]
     struct Task
     {
+        [SerializeField] public string name;
         [SerializeField] public float[] amounts;
         [SerializeField] public SprayBehaviour.SprayType[] allowedTypes;
     }
@@ -20,9 +26,12 @@ public class SprayTask : MonoBehaviour
     List<Task> tasks = new List<Task>();
     int currentTask = -1;
 
+    TMP_Text taskBoard;
+
     // Start is called before the first frame update
     void Awake()
     {
+        return;
         // Validate tasks
         foreach(var task in tasks)
         {
@@ -30,8 +39,7 @@ public class SprayTask : MonoBehaviour
         }
 
         sprays = GetComponentsInChildren<SprayBehaviour>();
-        
-        Debug.Log(sprays.Length);
+        taskBoard = GameObject.Find("Task").GetComponent<TMP_Text>();
 
         foreach(var spray in sprays)
         {
@@ -45,9 +53,18 @@ public class SprayTask : MonoBehaviour
     {
         currentTask++;
 
+        foreach(var drawableSurface in FindObjectsOfType<DrawableBehaviour>())
+        {
+            drawableSurface.Clear();
+        }
+
         if(currentTask == tasks.Count)
         {
-            // TODO Change
+            foreach (var spray in sprays)
+            {
+                resetSpray(spray);
+            }
+            taskBoard.text = "Kraj!";
             return;
         }
 
@@ -61,7 +78,11 @@ public class SprayTask : MonoBehaviour
             
             Assert.IsTrue(!spray.grab.BeingHeld, "Grabber did not let go!");
 
-            spray.gameObject.SetActive(false);
+            if(spray.gameObject.activeInHierarchy)
+            {
+                Instantiate(vanishFX, spray.transform.position, Quaternion.identity);
+                spray.gameObject.SetActive(false);
+            }
         }
 
         foreach(var allowedType in tasks[currentTask].allowedTypes)
@@ -70,8 +91,7 @@ public class SprayTask : MonoBehaviour
             {
                 if(spray.type == allowedType)
                 {
-                    spray.gameObject.SetActive(true);
-                    spray.transform.position = spray2Position[spray];
+                    resetSpray(spray);
                     break;
                 }
             }
@@ -83,23 +103,56 @@ public class SprayTask : MonoBehaviour
         if(currentTask < 0 || currentTask >= tasks.Count) return;
 
         bool completed = true;
+        float res = DrawableBehaviour.Resolution;
+        res *= res;
+
         for(int i = 0; i < DrawableBehaviour.NumColors; i++)
         {
-            if(DrawableBehaviour.GlobalColorCountBuffer[i] < tasks[currentTask].amounts[i])
+            if(DrawableBehaviour.GlobalColorCountBuffer[i]/res < tasks[currentTask].amounts[i])
             {
                 completed = false;
-                break;
             }
         }
 
         if(!completed) return;
 
-        Debug.Log("Task completed!");
+        AudioSource.PlayClipAtPoint(successSFX, Camera.main.transform.position);
         nextTask();
+    }
+
+    void resetSpray(SprayBehaviour spray)
+    {
+        spray.gameObject.SetActive(true);
+        spray.rb.velocity = Vector3.zero;
+        spray.rb.angularVelocity = Vector3.zero;
+
+        spray.transform.position = spray2Position[spray];
+    }
+
+    void updateTaskUI()
+    {
+        if(currentTask < 0 || currentTask >= tasks.Count) return;
+
+        string s = "";
+        s += "Zadatak\n";
+        s += tasks[currentTask].name + "\n";
+
+        float res = DrawableBehaviour.Resolution;
+        res *= res;
+
+        for(int i = 0; i < DrawableBehaviour.NumColors; i++)
+        {
+            if(tasks[currentTask].amounts[i] == 0) continue;
+
+            s += DrawableBehaviour.Boje[i] + ": " + $"{DrawableBehaviour.GlobalColorCountBuffer[i]/res:0.00}" + "/" + tasks[currentTask].amounts[i] + " m\xB2\n";
+        }
+
+        taskBoard.text = s;
     }
 
     void Update()
     {
         checkTask();
+        updateTaskUI();
     }
 }

@@ -23,11 +23,6 @@ public enum ColorIndex : uint
 public class DrawableBehaviour : MonoBehaviour
 {
     /// <summary>
-    /// Number of texels per 1 meter
-    /// </summary>
-    [SerializeField] public int resolution = 100;
-
-    /// <summary>
     /// Color which defines clear surface
     /// </summary>
     /// <returns></returns>
@@ -49,6 +44,10 @@ public class DrawableBehaviour : MonoBehaviour
     /// </summary>
     [SerializeField] Vector2 noiseOffset;
 
+    /// <summary>
+    /// Number of texels per 1 meter
+    /// /// </summary>
+    public static int Resolution = 200;
 
     /// <summary>
     /// Factor of surface/plane size.
@@ -84,6 +83,20 @@ public class DrawableBehaviour : MonoBehaviour
         "Cyan",
         "Magenta",
         "White"
+    };
+
+    /// <summary>
+    /// Boje used in textual format
+    /// </summary>
+    public static readonly string[] Boje =
+    {
+        "Crvena",
+        "Zelena",
+        "Plava",
+        "Žuta",
+        "Cijan",
+        "Roza",
+        "Bijela"
     };
 
     /// <summary>
@@ -150,15 +163,15 @@ public class DrawableBehaviour : MonoBehaviour
         // Check if there is too much chunks of surface to be painted | We can make it work but not needed.
         Assert.IsTrue
         (
-            resolution * PLANE_FACTOR * tf.localScale.x <= 1000 && resolution * PLANE_FACTOR * tf.localScale.z <= 1000,
+            Resolution * PLANE_FACTOR * tf.localScale.x <= 1000 && Resolution * PLANE_FACTOR * tf.localScale.z <= 1000,
             $"Object {gameObject.name} is to large or it has too big resolution! Consider fragmenting it!"
         );
 
         // Draw Texture init and assign to material
         drawTexture = new RenderTexture
         (
-            (int)(tf.localScale.x * resolution * PLANE_FACTOR),
-            (int)(tf.localScale.z * resolution * PLANE_FACTOR),
+            (int)(tf.localScale.x * Resolution * PLANE_FACTOR),
+            (int)(tf.localScale.z * Resolution * PLANE_FACTOR),
             1,
             UnityEngine.Experimental.Rendering.GraphicsFormat.R32G32B32A32_SFloat
         );
@@ -169,8 +182,8 @@ public class DrawableBehaviour : MonoBehaviour
         // Coat Texture init and assign to material
         coatTexture = new RenderTexture
         (
-            (int)(tf.localScale.x * resolution * PLANE_FACTOR),
-            (int)(tf.localScale.z * resolution * PLANE_FACTOR),
+            (int)(tf.localScale.x * Resolution * PLANE_FACTOR),
+            (int)(tf.localScale.z * Resolution * PLANE_FACTOR),
             1,
             UnityEngine.Experimental.Rendering.GraphicsFormat.R32G32B32A32_SFloat
         );
@@ -208,10 +221,10 @@ public class DrawableBehaviour : MonoBehaviour
         drawShader.SetBuffer(4, "ColorCountBuffer", LocalColorCountBuffer);
         drawShader.SetBuffer(5, "ColorCountBuffer", LocalColorCountBuffer);
 
-        drawShader.SetInt("resolution", resolution);
+        drawShader.SetInt("resolution", Resolution);
         drawShader.SetFloats("scale", new float[]{ PLANE_FACTOR * tf.localScale.x, PLANE_FACTOR * tf.localScale.z });
 
-        drawShader.Dispatch(1, 32, 32, 1);
+        Clear();
 
         // Reshape SprayColor collider
         float surfaceX = PLANE_FACTOR * tf.localScale.x;
@@ -236,11 +249,6 @@ public class DrawableBehaviour : MonoBehaviour
         {
             randomizeColor();
         }
-
-        if(Input.GetKeyDown(KeyCode.G))
-        {
-            GenerateLevel();
-        }
     }
 
     void OnDestroy()
@@ -250,6 +258,16 @@ public class DrawableBehaviour : MonoBehaviour
             LocalColorCountBuffer.Dispose();
             LocalColorCountBuffer = null;
         }
+    }
+
+    /// <summary>
+    /// Clears whole DrawTexture and CoatTexture
+    /// </summary>
+    public void Clear()
+    {
+        drawShader.Dispatch(1, 32, 32, 1);
+        
+        Count();
     }
 
     /// <summary>
@@ -380,143 +398,4 @@ public class DrawableBehaviour : MonoBehaviour
 
     }
 
-    void GenerateLevel(int seed = -1)
-    {
-        const int r = 1;
-        const int g = 2;
-        const int b = 4;
-        const int y = r+g;
-        const int m = r+b;
-        const int c = b+g;
-        const int w = r+g+b;
-        const int _r = -r;
-        const int _g = -g;
-        const int _b = -b;
-
-        List<int> options = new List<int>
-        {
-            r,g,b,y,m,c,w,_r,_g,_b
-        };
-
-        if(seed == -1)
-        {
-            seed = Random.Range(0, 2^32);
-        }
-
-        var rng = new System.Random(seed);
-
-        System.Func<IEnumerable<int>, int> getNumChoices = (x) =>
-        {
-            var cols = x.ToList();
-            cols.Sort((l,r) => r - l);
-            string s = "";
-            foreach(var col in cols) s += col + " ";
-            Debug.Log(s);
-
-            int numChoices = 0;
-
-            HashSet<int> c = new HashSet<int>();
-
-            if(cols[0] > 0) c.Add(cols[0]);
-            if(cols[1] > 0) c.Add(cols[1]);
-            if(cols[2] > 0) c.Add(cols[2]);
-
-            if(c.Count == 1)
-            {
-                if((cols[0] & -cols[1]) != 0) c.Add(cols[0] + cols[1]);
-                if((cols[0] & -cols[2]) != 0) c.Add(cols[0] + cols[2]);
-                if((cols[0] & (-cols[1]-cols[2])) != 0) c.Add(cols[0] + cols[1] + cols[2]);
-            }
-            else if(c.Count == 2)
-            {
-                c.Add(cols[0] | cols[1]);
-                foreach(var col in c.ToArray())
-                {
-                    if((col & -cols[2]) != 0) c.Add(col + cols[2]);
-                }
-            }
-            else if(c.Count == 3)
-            {
-                c.Add(cols[0] | cols[1]);
-                c.Add(cols[0] | cols[2]);
-                c.Add(cols[1] | cols[2]);
-                c.Add(cols[0] | cols[1] | cols[2]);
-            }
-
-            c.Remove(0);
-            string s1 = "";
-            foreach(var col in c) s1 += col + " ";
-            Debug.Log(s1);
-            Debug.Log(c.Count);
-            return c.Count;
-        };
-
-        IEnumerable sample;
-        int numChoices = 0;
-
-        for(int i = 0; i < 10 || numChoices < 3; i++)
-        {
-            var currSample = options.OrderBy(x => rng.Next()).Take(3);
-            int currNumChoices = getNumChoices(currSample);
-            if(currNumChoices > numChoices)
-            {
-                numChoices = currNumChoices;
-                sample = currSample;
-            }
-        }
-    }
 }
-
-
-
-
-/*
-    WALL PROCGEN:
-
-    - 3 colors should be generated
-
-    #1
-
-    - if primary color gets selected:
-        - give w|y|m|c spray
-        - make wall juicy with suptractive color
-        - if W then give another suptractive color
-
-    - if secondary color gets selected_
-        - give r|g|b|w spray
-        - if not W, make wall juicy with undesired suptractive color
-        - if W, make wall juicy with desired suptractive
-
-
-    TOP DOWN?
-    Needs to paint 
-
-    + SPRAY
-    - SUBTRACTIVE SPRAY
-    ~ SUBTRACTIVE WALL
-
-    RED:
-        +YELLOW
-            ~GREEN
-            -GREEN
-        +SMAGENTA
-            ~BLUE
-            -BLUE
-        +WHITE
-            ~BLUE
-                ~GREEN
-                -GREEN
-            -BLUE
-                ~GREEN
-                -GREEN
-
-    BOTTOM UP?
-    Gets the spray
-
-    1-2 Normal, 1-2 subtractive, exactly 3 sprays
-
-    HEURISTICS:
-        - if 2 are suptractive then normal is secondary
-
-
-*/

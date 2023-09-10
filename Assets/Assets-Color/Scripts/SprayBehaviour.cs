@@ -7,11 +7,6 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.TextCore.Text;
 
-public static class ColorUtil
-{
-}
-
-
 public class SprayBehaviour : MonoBehaviour
 {
     public enum SprayType
@@ -74,15 +69,17 @@ public class SprayBehaviour : MonoBehaviour
     bool isBlack = false;
 
     Transform sprayDir;
-    ParticleSystem ps;
+    public ParticleSystem ps { get; private set; }
     AudioSource sprayCanSound;
     public Grabbable grab { get; private set; }
+    public Rigidbody rb { get; set; }
     TMP_Text sprayStat;
     Transform canvasJoint;
 
     // Start is called before the first frame update
     void Awake()
     {
+        rb = GetComponent<Rigidbody>();
         sprayDir = transform.Find("Dir");
         var emitter = Instantiate(sprayEmitter, sprayDir);
         ps = emitter.GetComponent<ParticleSystem>();
@@ -189,7 +186,7 @@ public class SprayBehaviour : MonoBehaviour
         // Rotate joint
         canvasJoint.LookAt(canvasJoint.position - right, canvasJoint.parent.up);
 
-        float res = FindObjectOfType<DrawableBehaviour>().resolution;
+        float res = DrawableBehaviour.Resolution;
         res *= res;
 
         string s = "";
@@ -197,7 +194,7 @@ public class SprayBehaviour : MonoBehaviour
         {
             // if(TypeToString[(int)type] == DrawableBehaviour.ColorStrings[i])
             {
-                s += $"{DrawableBehaviour.ColorStrings[i]}: {DrawableBehaviour.GlobalColorCountBuffer[i]/res:0.00}m\xB2\n";
+                s += $"{DrawableBehaviour.Boje[i]}: {DrawableBehaviour.GlobalColorCountBuffer[i]/res:0.00}m\xB2\n";
                 // break;
             }
         }

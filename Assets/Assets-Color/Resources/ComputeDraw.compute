@@ -197,7 +197,7 @@ float noise( in float2 p )
 
 // id = uv * scale * resolution
 
-// Stores 'color' on a DrawTexture within a radius and atomically increments/decrements color count
+// Additively stores 'color' on a DrawTexture within a radius and atomically increments/decrements color count
 [numthreads(32,32,1)]
 void Draw(uint3 id : SV_DispatchThreadID)
 {
@@ -218,7 +218,9 @@ void Draw(uint3 id : SV_DispatchThreadID)
     float4 currColor = DrawTexture[id.xy];
     if(distance(curr, pos) <= radius)
     {
-        currColor = color;
+        currColor.r = max(currColor.r, color.r);
+        currColor.g = max(currColor.g, color.g);
+        currColor.b = max(currColor.b, color.b);
     }
     DrawTexture[id.xy] = currColor;
 };
