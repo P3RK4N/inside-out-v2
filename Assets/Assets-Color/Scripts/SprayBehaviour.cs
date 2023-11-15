@@ -120,14 +120,28 @@ public class SprayBehaviour : MonoBehaviour
     // Update is called once per frame
 
     static RaycastHit[] HitInfos = new RaycastHit[5];
+
+    bool pressing = false;
+
     void Update()
     {
-        if(ps.isStopped && grab.BeingHeld && Input.GetMouseButtonDown((int)MouseButton.Left))
+        bool pressed =
+        (
+            Input.GetMouseButton((int)MouseButton.Left) ||
+            InputBridge.Instance.RightTrigger > 0.5f ||
+            OVRInput.Get(OVRInput.Button.PrimaryIndexTrigger, OVRInput.Controller.RTouch)
+        );
+
+        bool pressedDown = !pressing && pressed;
+        bool pressedUp = pressing && !pressed;
+        pressing = pressed;
+
+        if(ps.isStopped && grab.BeingHeld && pressedDown)
         {
             ps.Play();
             sprayCanSound.Play();
         }
-        else if(ps.isPlaying && (!grab.BeingHeld || Input.GetMouseButtonUp((int)MouseButton.Left)))
+        else if(ps.isPlaying && (!grab.BeingHeld || pressedUp))
         {
             ps.Stop();
             sprayCanSound.Stop();
@@ -145,7 +159,7 @@ public class SprayBehaviour : MonoBehaviour
         if(ps.isPlaying)
         {
             // Draw with mouse
-            if(Input.GetMouseButton((int)MouseButton.Left))
+            if(pressing)
             {
                 int hits = Physics.RaycastNonAlloc(sprayDir.position, sprayDir.right, HitInfos, reach, 1 << LayerMask.NameToLayer("Drawable"));
 

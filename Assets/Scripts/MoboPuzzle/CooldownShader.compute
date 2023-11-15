@@ -52,7 +52,7 @@ void Temperature (uint3 id : SV_DispatchThreadID)
     else if(!coolStop)
     {
         prevTemp.x = max(0.0, prevTemp.x - coolSpeed);
-    }
+    } 
 
     Result[id.xy] = prevTemp;
 };
@@ -104,10 +104,11 @@ void Edges(uint3 id : SV_DispatchThreadID)
         int x = id.x - beginX;
         int y = id.y - beginY;
 
-        if(x >= 1 && y >= 1 && x < bigDrawSize-1 && y < bigDrawSize-1)
+        if(x >= 1 && y >= 1 && x < bigDrawSize-1 && y < bigDrawSize-1) 
         {
             float4 prevResult = Result[id.xy];
-            prevResult.z = (0.1f * floor(i / 4.0f) + 0.1f);
+            uint tmp = (i / 4 + 1);
+            prevResult.z = float(tmp) / 10.0f;
             prevResult.w = prevResult.z;
             Result[id.xy] = prevResult;
             return;

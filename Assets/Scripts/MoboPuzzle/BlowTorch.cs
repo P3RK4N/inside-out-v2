@@ -13,7 +13,7 @@ public class BlowTorch : MonoBehaviour
 
     public static float[,] drawFilter;
     public static float elipseFactor = 0.9f;
-    public static int drawSize = 20;
+    public static int drawSize = 10;
     public static float drawSpeed = 0.02f;
     public static float coolSpeed = 0.002f;
     public static float heatSpeed = 0.015f;
@@ -62,7 +62,15 @@ public class BlowTorch : MonoBehaviour
     void updateLaser()
     {
 
-        if(g.BeingHeld && (InputBridge.Instance.RightTrigger > 0.5f || Input.GetKey(KeyCode.Mouse0)))
+        if
+        (
+            g.BeingHeld &&
+            (
+                InputBridge.Instance.RightTrigger > 0.5f || 
+                Input.GetKey(KeyCode.Mouse0) ||
+                OVRInput.Get(OVRInput.Button.PrimaryIndexTrigger, OVRInput.Controller.RTouch)
+            )
+        )
         {
             if(!blowSound.isPlaying) blowSound.Play();
             else if(blowSound.time > 3.0f) blowSound.time = 1.0f;

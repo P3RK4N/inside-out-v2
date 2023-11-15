@@ -12,8 +12,8 @@ public class TextureWrite : MonoBehaviour
     public List<Vector4> edgesList;
     public GameObject chip;
 
-    static int texWidth =   400;
-    static int texHeight =  400;
+    static int texWidth =   200;
+    static int texHeight =  200;
 
     RenderTexture weldTexture { get; set; }
     public RenderTexture getWeldTexture() { return weldTexture; }
@@ -135,8 +135,8 @@ public class TextureWrite : MonoBehaviour
         tempShader.SetInt("texWidth", texWidth);
         tempShader.SetInt("texHeight", texHeight);
 
-        tempShader.Dispatch(2, 16, 16, 1);
-        tempShader.Dispatch(3, 16, 16, 1);
+        tempShader.Dispatch(2, 8, 8, 1);
+        tempShader.Dispatch(3, 8, 8, 1);
 
         r.material.SetTexture("_BaseMap", weldTexture);
         r.material.SetFloat("_TexelWidth", 1.0f / texWidth);
@@ -167,21 +167,20 @@ public class TextureWrite : MonoBehaviour
         electricity = true;
         while(true)
         {
-            tempShader.Dispatch(4, 16, 16, 1);
+            tempShader.Dispatch(4, 8, 8, 1);
 
             int[] data = new int[10]; 
             bitBuffer.GetData(data);
 
             if(data[0] == 1) 
             {
-                Debug.Log("SC hapened");
                 data[0] = 0;
                 bitBuffer.SetData(data);
                 electricity = false;
                 needCleaning = true;
                 break;
             }
-            if(data[1] == 1) Debug.Log("BFS hapened");
+            if(data[1] == 1) { }
             else
             {
                 electricity = false;
@@ -225,7 +224,7 @@ public class TextureWrite : MonoBehaviour
 
     void runTempShader()
     {
-        tempShader.Dispatch(0, 16, 16, 1);
+        tempShader.Dispatch(0, 8, 8, 1);
 
         tempShader.SetInt("beginWidth", -1000);
         tempShader.SetInt("beginHeight", -1000);
@@ -235,7 +234,7 @@ public class TextureWrite : MonoBehaviour
     {
         while(true)
         {
-            tempShader.Dispatch(5,16,16,1);
+            tempShader.Dispatch(5,8,8,1);
             int[] data = new int[10];
             bitBuffer.GetData(data);
             if(data[2] == 1)
@@ -261,6 +260,7 @@ public class TextureWrite : MonoBehaviour
 
         Color[] texels = new Color[texWidth * texHeight];
         texels = result.GetPixels();
+        var t = result.GetPixelData<Vector4>(0);
 
         float[,] vals = new float[texWidth, texHeight];
 

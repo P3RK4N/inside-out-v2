@@ -85,7 +85,7 @@ public class MainMenu : MonoBehaviour
             yield return new WaitForEndOfFrame();
         }
 
-        SceneManager.LoadScene("Colors");
+        SceneManager.LoadScene("Sandbox");
     }
 
     IEnumerator onQuiz() 
@@ -102,7 +102,7 @@ public class MainMenu : MonoBehaviour
             yield return new WaitForEndOfFrame();
         }
 
-        SceneManager.LoadScene("ColorsQuiz");
+        SceneManager.LoadScene("Quiz");
     }
 
     void onSettings() 
@@ -138,7 +138,7 @@ public class MainMenu : MonoBehaviour
 
     void onBack() 
     {
-        Title.text = "Colors";
+        Title.text = "InsideOut";
 
         PlayButton.gameObject.SetActive(true);
         QuizButton.gameObject.SetActive(true);
@@ -180,7 +180,7 @@ public class MainMenu : MonoBehaviour
     {
         Title.text = 
             PlayButton.gameObject.activeInHierarchy ? 
-                "Colors" : 
+                "InsideOut" : 
                 Volume.gameObject.activeInHierarchy ? 
                     Loc.loc(new string[]{ "Settings", "Postavke" }) : 
                     Loc.loc(new string[]{ "Credits", "Zasluge" });

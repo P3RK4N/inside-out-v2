@@ -21,7 +21,7 @@ public class ExitOnStart : MonoBehaviour
     {
         if(input.StartButtonDown || Input.GetKeyDown(KeyCode.Escape))
         {
-            SceneManager.LoadScene("ColorsMenu");
+            SceneManager.LoadScene("Main Menu");
         }
     }
 }

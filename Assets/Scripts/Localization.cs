@@ -125,14 +125,24 @@ namespace Localization
         {
             @"Students:
 Bruno Perković
+Marin Petric
+Josipa Markić
+Branimir Tomeljak
+Sven Leko
 
 Mentors:
-Mirko Sužnjević",
+Mirko Sužnjević
+Lea Skorin Kapov",
             @"Studenti:
 Bruno Perković
+Marin Petric
+Josipa Markić
+Branimir Tomeljak
+Sven Leko
 
-Mentori:
-Mirko Sužnjević"
+Mentors:
+Mirko Sužnjević
+Lea Skorin Kapov"
         };
     }
 

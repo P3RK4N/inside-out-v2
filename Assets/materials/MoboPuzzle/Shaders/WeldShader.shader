@@ -13,8 +13,8 @@ Shader "Example/WeldShader"
         _ScaleFactor("Scale factor", float) = 1.0
         _MinEdgeFactor("Min Edge Factor", float) = 1.0
         _MinInsideFactor("Min Inside Factor", float ) = 1.0
-        _MaxEdgeFactor("Max Edge Factor", float) = 15.0
-        _MaxInsideFactor("Max Inside Factor", float) = 15.0
+        _MaxEdgeFactor("Max Edge Factor", float) = 5.0
+        _MaxInsideFactor("Max Inside Factor", float) = 5.0
         _PlayerDistance("Player Distance", float ) = 5.0
     }
 
@@ -204,6 +204,17 @@ Shader "Example/WeldShader"
             half4 valToColor(float val)
             {
                 int index = round(val*10.0f);
+
+                switch (index)
+                {
+                    case 0: return colors[0];
+                    case 1: return colors[1];
+                    case 2: return colors[2];
+                    case 3: return colors[3];
+                    case 4: return colors[4];
+                    case 5: return colors[5];
+                }
+    
                 return colors[clamp(index, 0, 6)];
             }
 
@@ -230,8 +241,7 @@ Shader "Example/WeldShader"
                 half4 pointColor = valToColor(texSample.b);
                 metallicColor *= pointColor * metalSample;
                 half4 outColor = metallicColor * litCoefficient.y * 0.25 + ambient * half4(light.color, 1.0) * metallicColor + specularColor * litCoefficient.z * specularSample;
-
-
+    
                 return tempColor.r > 0.01 ? lerp(outColor, tempColor, clamp((tempColor.r-0.01)*20, 0, 1)) : outColor;
                 // return valToColor(SAMPLE_TEXTURE2D(_BaseMap, sampler_BaseMap, IN.UV).b);
                 // return SAMPLE_TEXTURE2D(_BaseMap, sampler_BaseMap, IN.UV).bbbb;
