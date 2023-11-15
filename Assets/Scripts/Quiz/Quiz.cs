@@ -4,18 +4,29 @@ using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
 
+[System.Serializable]
+public struct Question
+{
+    [SerializeField]
+    public string text;
+    [SerializeField]
+    public List<string> answers;
+    [SerializeField]
+    public string solution;
+
+    public Question(string text, List<string> answers, string solution)
+    {
+        this.text = text;
+        this.answers = answers;
+        this.solution = solution;
+    }
+}
+
+
 public class Quiz : MonoBehaviour
 {
-    [System.Serializable]
-    struct Question
-    {
-        [SerializeField]
-        public string text;
-        [SerializeField]
-        public List<string> answers;
-        [SerializeField]
-        public string solution;
-    }
+    [SerializeField]
+    string questionFile = "";
 
     [SerializeField]
     List<Question> Questions;
@@ -49,6 +60,14 @@ public class Quiz : MonoBehaviour
         "Start Quiz!",
         "Započni kviz!"
     };
+
+    void Awake()
+    {
+        if(questionFile.Length > 0)
+        {
+            Questions = QuestionParser.Default();
+        }
+    }
 
     // Start is called before the first frame update
     void Start()

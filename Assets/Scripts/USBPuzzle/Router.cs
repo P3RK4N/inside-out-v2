@@ -63,7 +63,7 @@ public class Router : MonoBehaviour
     {
         if(comp.name == "USB")
         {
-            AudioSource.PlayClipAtPoint(connectionEstablished, transform.position);
+            if(connectionEstablished) AudioSource.PlayClipAtPoint(connectionEstablished, transform.position);
             PromptScript.instance.updatePrompt(Loc.loc(StoryTxt.Error), 3.0f);
         }
     }

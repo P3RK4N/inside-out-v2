@@ -19,7 +19,12 @@ public class ExitOnStart : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(input.StartButtonDown || Input.GetKeyDown(KeyCode.Escape))
+        if
+        (
+            input.StartButtonDown ||
+            Input.GetKeyDown(KeyCode.Escape) ||
+            OVRInput.GetDown(OVRInput.Button.Start)
+        )
         {
             SceneManager.LoadScene("Main Menu");
         }

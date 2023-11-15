@@ -96,7 +96,7 @@ public class TextureWrite : MonoBehaviour
 
         weldTexture = new RenderTexture(texWidth, texHeight, 1, UnityEngine.Experimental.Rendering.GraphicsFormat.R32G32B32A32_SFloat);
         weldTexture.enableRandomWrite = true;
-        weldTexture.filterMode = FilterMode.Point;
+        weldTexture.filterMode = FilterMode.Bilinear;
         weldTexture.Create();
 
         //0 -> shortCircuit happened

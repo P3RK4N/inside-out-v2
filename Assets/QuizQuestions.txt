@@ -1,0 +1,108 @@
+1. Četiri osnovne funkcije videoigara izvode se?
+(a) Jednom nakon pokretanja igre
+(b) Bez prestanka u petlji
+(c) Pri unosu komandi
+(d) Za vrijeme učitavanja novog nivoa
+b
+2. Jedna od osnovnih funkcija videoigara je?
+(a) Simulacija
+(b) Virtualizacija
+(c) Optimizacija
+(d) Transformacija
+a
+3. Simulacija služi za?
+(a) Unos komandi
+(b) Izračun novog stanja
+(c) Prikaz slike
+(d) Izračun boje piksela
+b
+4. Što od ovog ne vrijedi za iscrtavanje?
+(a) Koristi GPU
+(b) Boja piksele
+(c) Pomiče igrača
+(d) Ovisi o podacima videoigre
+c
+5. Izbaci uljeza:
+(a) Monitor
+(b) Tipkovnica
+(c) Miš
+(d) Kontroler
+a
+6. Koja je okvirna frekvencija na kojoj najbrži komercijalno dostupni procesor može raditi?
+(a) 0.5 GHz
+(b) 256 GHz
+(c) 5 GHz
+(d) 10 GHz
+c
+7. Koliko gigabajta RAM-a može podržavati moderna matična ploča?
+(a) Do 8 GB
+(b) Do 32 GB
+(c) Do 128 GB
+(d) Do 2048 GB
+c
+8. Koja mjerna jedinica se uglavnom koristi za brzinu RAM-a?
+(a) Kilobitima (Kb)
+(b) Megahertzima (MHz)
+(c) Gigahertzima (GHz)
+(d) Terabajtima (TB)
+b
+9. Koja tehnologija se koristi za pohranu podataka u tvrdim diskovima?
+(a) Magnetske ploče
+(b) Flash memorija
+(c) Optički diskovi
+(d) RAM memorija
+a
+10. Koja je funkcija grafičke kartice?
+(a) Pohranjivanje podataka
+(b) Prikazivanje slike na zaslonu
+(c) Obrada teksta
+(d) Povezivanje s mrežom
+b
+11. Kojom mjernom jedinicom se mjeri snaga napajanja?
+(a) Voltima (V)
+(b) Amperima (A)
+(c) Vatima (W)
+(d) Kilovatima (kW)
+c
+12. Koliko puta su računalni procesori postali brži u posljednjih 40 godina?
+(a) Deset puta
+(b) Stotinu puta
+(c) Tisuću puta
+(d) Milijun puta
+c
+13. Koji su oblici utičnice na matičnoj ploči za procesor?
+(a) LGA i PGA
+(b) DIMM i SODIMM
+(c) SATA i IDE
+(d) USB i Ethernet
+a
+14. Koji su tipovi utora za RAM na matičnoj ploči?
+(a) SATA i IDE
+(b) PCI-Express x16 i x8
+(c) LGA i PGA
+(d) DIMM i SODIMM
+d
+15. Koji je najčešći kabel za povezivanje tvrdog diska ili SSD-a s matičnom pločom?
+(a) SATA
+(b) USB
+(c) PCI-Express
+(d) HDMI
+a
+16. U koji utor se postavlja grafička kartica na matičnoj ploči?
+(a) SATA
+(b) USB
+(c) PCI-Express x16
+(d) HDMI
+c
+17. Koji oblik napajanja je najcešći u računalima?
+(a) SATA
+(b) PCI-Express
+(c) ATX
+(d) USB
+c
+18. Koja je godina predstavljanja SATA sučelja za povezivanje tvrdih diskova i SSD-ova?
+(a) 1990.
+(b) 2000.
+(c) 2010.
+(d) 2020.
+b
