@@ -52,6 +52,6 @@ public class Exit : MonoBehaviour
             yield return new WaitForEndOfFrame();
         }
 
-        SceneManager.LoadScene("Main Menu");
+        SceneManager.LoadScene("ColorsMenu");
     }
 }

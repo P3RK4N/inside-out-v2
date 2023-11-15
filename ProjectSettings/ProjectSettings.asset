@@ -13,7 +13,7 @@ PlayerSettings:
   useOnDemandResources: 0
   accelerometerFrequency: 60
   companyName: Crveni tim
-  productName: InsideOut
+  productName: Colors
   defaultCursor: {fileID: 0}
   cursorHotspot: {x: 0, y: 0}
   m_SplashScreenBackgroundColor: {r: 0.13725491, g: 0.12156863, b: 0.1254902, a: 1}
@@ -198,9 +198,6 @@ PlayerSettings:
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 11400000, guid: d1f02cfdce254e24095dc5670adf0263, type: 2}
-  - {fileID: 11400000, guid: 3936f1099fb7cde46b436a5a1b3346e2, type: 2}
-  - {fileID: -6914485001245700900, guid: 2766abfedae8e64488525ef8e8c0ac1b, type: 2}
-  - {fileID: 2946352859549545271, guid: e3c67dd1098836a4d9075a0f18f865ca, type: 2}
   metroInputSource: 0
   wsaTransparentSwapchain: 0
   m_HolographicPauseOnTrackingLoss: 1
@@ -221,7 +218,7 @@ PlayerSettings:
   androidSupportedAspectRatio: 1
   androidMaxAspectRatio: 2.1
   applicationIdentifier:
-    Android: com.Crvenitim.InsideOut
+    Android: com.Crvenitim.Colors
     Standalone: com.Crveni-tim.InsideOut
   buildNumber:
     Standalone: 0
