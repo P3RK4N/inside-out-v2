@@ -198,8 +198,8 @@ PlayerSettings:
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 11400000, guid: d1f02cfdce254e24095dc5670adf0263, type: 2}
+  - {fileID: 0}
   - {fileID: 11400000, guid: 3936f1099fb7cde46b436a5a1b3346e2, type: 2}
-  - {fileID: -6914485001245700900, guid: 2766abfedae8e64488525ef8e8c0ac1b, type: 2}
   - {fileID: 2946352859549545271, guid: e3c67dd1098836a4d9075a0f18f865ca, type: 2}
   metroInputSource: 0
   wsaTransparentSwapchain: 0
@@ -593,7 +593,7 @@ PlayerSettings:
   m_BuildTargetGraphicsAPIs:
   - m_BuildTarget: AndroidPlayer
     m_APIs: 15000000
-    m_Automatic: 0
+    m_Automatic: 1
   - m_BuildTarget: iOSSupport
     m_APIs: 10000000
     m_Automatic: 1
@@ -617,7 +617,7 @@ PlayerSettings:
   m_DefaultShaderChunkSizeInMB: 16
   m_DefaultShaderChunkCount: 0
   openGLRequireES31: 0
-  openGLRequireES31AEP: 0
+  openGLRequireES31AEP: 1
   openGLRequireES32: 0
   m_TemplateCustomTags: {}
   mobileMTRendering:
@@ -631,7 +631,7 @@ PlayerSettings:
   m_BuildTargetNormalMapEncoding: []
   m_BuildTargetDefaultTextureCompressionFormat:
   - m_BuildTarget: Android
-    m_Format: 3
+    m_Format: 2
   playModeTestRunnerEnabled: 0
   runPlayModeTestAsEditModeTest: 0
   actionOnDotNetUnhandledException: 1
