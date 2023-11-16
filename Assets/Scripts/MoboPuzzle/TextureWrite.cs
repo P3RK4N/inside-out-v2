@@ -94,7 +94,7 @@ public class TextureWrite : MonoBehaviour
         //Find PlayerTransform
         PlayerTransform = GameObject.Find("CenterEyeAnchor").transform;
 
-        weldTexture = new RenderTexture(texWidth, texHeight, 1, UnityEngine.Experimental.Rendering.GraphicsFormat.R32G32B32A32_SFloat);
+        weldTexture = new RenderTexture(texWidth, texHeight, 1, UnityEngine.Experimental.Rendering.GraphicsFormat.R16G16B16A16_SFloat);
         weldTexture.enableRandomWrite = true;
         weldTexture.filterMode = FilterMode.Bilinear;
         weldTexture.Create();
