@@ -13,7 +13,7 @@ public class BlowTorch : MonoBehaviour
 
     public static float[,] drawFilter;
     public static float elipseFactor = 0.9f;
-    public static int drawSize = 10;
+    public static int drawSize = 7;
     public static float drawSpeed = 0.02f;
     public static float coolSpeed = 0.002f;
     public static float heatSpeed = 0.015f;
@@ -95,7 +95,7 @@ public class BlowTorch : MonoBehaviour
                     weldShader.SetInt("beginWidth", width - drawSize / 2);
                     weldShader.SetInt("beginHeight", height - drawSize / 2);
 
-                    weldShader.Dispatch(1, 16, 16, 1);
+                    weldShader.Dispatch(1, TextureWrite.X, TextureWrite.Y, TextureWrite.Z);
                 }
             }
         }

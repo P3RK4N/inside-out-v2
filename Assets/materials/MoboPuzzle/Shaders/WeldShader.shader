@@ -13,8 +13,8 @@ Shader "Example/WeldShader"
         _ScaleFactor("Scale factor", float) = 1.0
         _MinEdgeFactor("Min Edge Factor", float) = 1.0
         _MinInsideFactor("Min Inside Factor", float ) = 1.0
-        _MaxEdgeFactor("Max Edge Factor", float) = 5.0
-        _MaxInsideFactor("Max Inside Factor", float) = 5.0
+        _MaxEdgeFactor("Max Edge Factor", float) = 2.0
+        _MaxInsideFactor("Max Inside Factor", float) = 2.0
         _PlayerDistance("Player Distance", float ) = 5.0
     }
 

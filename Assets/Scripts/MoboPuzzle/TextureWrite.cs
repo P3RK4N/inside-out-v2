@@ -12,8 +12,12 @@ public class TextureWrite : MonoBehaviour
     public List<Vector4> edgesList;
     public GameObject chip;
 
-    static int texWidth =   200;
-    static int texHeight =  200;
+    static int texWidth =   140;
+    static int texHeight =  140;
+
+    public static int X = 5;
+    public static int Y = 5;
+    public static int Z = 1;
 
     RenderTexture weldTexture { get; set; }
     public RenderTexture getWeldTexture() { return weldTexture; }
@@ -96,7 +100,7 @@ public class TextureWrite : MonoBehaviour
 
         weldTexture = new RenderTexture(texWidth, texHeight, 1, UnityEngine.Experimental.Rendering.GraphicsFormat.R16G16B16A16_SFloat);
         weldTexture.enableRandomWrite = true;
-        weldTexture.filterMode = FilterMode.Bilinear;
+        weldTexture.filterMode = FilterMode.Point;
         weldTexture.Create();
 
         //0 -> shortCircuit happened
@@ -135,8 +139,8 @@ public class TextureWrite : MonoBehaviour
         tempShader.SetInt("texWidth", texWidth);
         tempShader.SetInt("texHeight", texHeight);
 
-        tempShader.Dispatch(2, 8, 8, 1);
-        tempShader.Dispatch(3, 8, 8, 1);
+        tempShader.Dispatch(2, X, Y, Z);
+        tempShader.Dispatch(3, X, Y, Z);
 
         r.material.SetTexture("_BaseMap", weldTexture);
         r.material.SetFloat("_TexelWidth", 1.0f / texWidth);
@@ -167,7 +171,7 @@ public class TextureWrite : MonoBehaviour
         electricity = true;
         while(true)
         {
-            tempShader.Dispatch(4, 8, 8, 1);
+            tempShader.Dispatch(4, X, Y, Z);
 
             int[] data = new int[10]; 
             bitBuffer.GetData(data);
@@ -224,7 +228,7 @@ public class TextureWrite : MonoBehaviour
 
     void runTempShader()
     {
-        tempShader.Dispatch(0, 8, 8, 1);
+        tempShader.Dispatch(0, X, Y, Z);
 
         tempShader.SetInt("beginWidth", -1000);
         tempShader.SetInt("beginHeight", -1000);
@@ -234,7 +238,7 @@ public class TextureWrite : MonoBehaviour
     {
         while(true)
         {
-            tempShader.Dispatch(5,8,8,1);
+            tempShader.Dispatch(5, X, Y, Z);
             int[] data = new int[10];
             bitBuffer.GetData(data);
             if(data[2] == 1)
