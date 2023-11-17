@@ -21,10 +21,4 @@ public class Rotator : MonoBehaviour
         audioSource.PlayOneShot(audioSource.clip, 1.0f);
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        Vector3 eulerAngles = transform.rotation.eulerAngles;
-        transform.rotation = Quaternion.Euler(eulerAngles.x, (eulerAngles.y+rotatingSpeed*Time.deltaTime)%360.0f, eulerAngles.z);        
-    }
 }
