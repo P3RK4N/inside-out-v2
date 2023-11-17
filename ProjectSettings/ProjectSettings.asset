@@ -199,6 +199,8 @@ PlayerSettings:
   - {fileID: 0}
   - {fileID: 11400000, guid: d1f02cfdce254e24095dc5670adf0263, type: 2}
   - {fileID: 0}
+  - {fileID: 11400000, guid: 3936f1099fb7cde46b436a5a1b3346e2, type: 2}
+  - {fileID: 2946352859549545271, guid: e3c67dd1098836a4d9075a0f18f865ca, type: 2}
   metroInputSource: 0
   wsaTransparentSwapchain: 0
   m_HolographicPauseOnTrackingLoss: 1
@@ -629,7 +631,7 @@ PlayerSettings:
   m_BuildTargetNormalMapEncoding: []
   m_BuildTargetDefaultTextureCompressionFormat:
   - m_BuildTarget: Android
-    m_Format: 2
+    m_Format: 3
   playModeTestRunnerEnabled: 0
   runPlayModeTestAsEditModeTest: 0
   actionOnDotNetUnhandledException: 1
