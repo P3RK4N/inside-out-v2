@@ -13,7 +13,7 @@ public class BlowTorch : MonoBehaviour
 
     public static float[,] drawFilter;
     public static float elipseFactor = 0.9f;
-    public static int drawSize = 7;
+    public static int drawSize = 10;
     public static float drawSpeed = 0.02f;
     public static float coolSpeed = 0.002f;
     public static float heatSpeed = 0.015f;

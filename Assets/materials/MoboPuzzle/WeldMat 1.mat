@@ -7,8 +7,8 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: WeldMat
-  m_Shader: {fileID: 4800000, guid: 9259dfd544daebd458d83877d3d24948, type: 3}
+  m_Name: WeldMat 1
+  m_Shader: {fileID: 4800000, guid: a882e7c3317b1f943b7d232e7ecde7b8, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords: []
@@ -89,8 +89,8 @@ Material:
     - _InsideFactor: 15.12
     - _MainTextureHeight: 100
     - _MainTextureWidth: 100
-    - _MaxEdgeFactor: 5
-    - _MaxInsideFactor: 5
+    - _MaxEdgeFactor: 1
+    - _MaxInsideFactor: 1
     - _Metallic: 0
     - _MinEdgeFactor: 1
     - _MinInsideFactor: 1

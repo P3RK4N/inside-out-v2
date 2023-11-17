@@ -574,6 +574,11 @@ PrefabInstance:
       propertyPath: edgesList.Array.data[1].z
       value: 0.3
       objectReference: {fileID: 0}
+    - target: {fileID: 3721616397457936190, guid: 0ebd84ba040013f478695da30a323830,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 5146639139701941568, guid: 0ebd84ba040013f478695da30a323830,
         type: 3}
       propertyPath: m_StaticEditorFlags
@@ -991,6 +996,11 @@ PrefabInstance:
       propertyPath: edgesList.Array.data[5].z
       value: 0.85
       objectReference: {fileID: 0}
+    - target: {fileID: 3721616397457936190, guid: 0ebd84ba040013f478695da30a323830,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 5146639139701941568, guid: 0ebd84ba040013f478695da30a323830,
         type: 3}
       propertyPath: m_StaticEditorFlags
@@ -1367,6 +1377,11 @@ PrefabInstance:
         type: 3}
       propertyPath: PlayerTransform
       value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 3721616397457936190, guid: 0ebd84ba040013f478695da30a323830,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5146639139701941568, guid: 0ebd84ba040013f478695da30a323830,
         type: 3}

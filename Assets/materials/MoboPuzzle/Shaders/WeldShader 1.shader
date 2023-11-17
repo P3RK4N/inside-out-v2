@@ -1,4 +1,4 @@
-Shader "Example/WeldShader0"
+Shader "Example/WeldShader1"
 {
     // The _BaseColor variable is visible in the Material's Inspector, as a field
     // called Base Color. You can use it to select a custom color. This variable
@@ -27,8 +27,6 @@ Shader "Example/WeldShader0"
             HLSLPROGRAM
             #pragma target 5.0
             #pragma vertex vert
-            #pragma hull hull
-            #pragma domain domain
             #pragma fragment frag
 
             
@@ -39,23 +37,6 @@ Shader "Example/WeldShader0"
             {
                 float4 positionOS   : POSITION;
                 float2 UV : TEXCOORD;
-                UNITY_VERTEX_INPUT_INSTANCE_ID
-            };
-
-            struct TessellationControlPoint 
-            {
-                float3 positionWS : INTERNALTESSPOS;
-                float2 UV : TEXCOORD;
-                float3 normalWS : NORMAL;
-                float3 tangentWS : TANGENT;
-                float3 bitangentWS : BINORMAL;
-                UNITY_VERTEX_INPUT_INSTANCE_ID
-            };
-
-            struct TessellationFactors
-            {
-                float edge[3] : SV_TessFactor;
-                float inside : SV_InsideTessFactor;
             };
 
             struct Varyings
@@ -64,8 +45,6 @@ Shader "Example/WeldShader0"
                 float3 positionWS : TEXCOORD1;
                 float2 UV : TEXCOORD2;
                 float4 positionCS : SV_POSITION;
-                UNITY_VERTEX_INPUT_INSTANCE_ID
-                UNITY_VERTEX_OUTPUT_STEREO
             };
 
 
@@ -87,105 +66,17 @@ Shader "Example/WeldShader0"
                 float _PlayerDistance;
             CBUFFER_END
 
-            TessellationControlPoint vert(Attributes IN)
+            Varyings vert(Attributes IN)
             {
-               TessellationControlPoint OUT;
-
-               UNITY_SETUP_INSTANCE_ID(IN);
-               UNITY_TRANSFER_INSTANCE_ID(IN, OUT);
+               Varyings OUT;
 
                OUT.positionWS = TransformObjectToWorld(IN.positionOS);
+               OUT.positionCS = TransformObjectToHClip(IN.positionOS);
                OUT.UV = TRANSFORM_TEX(IN.UV, _BaseMap);
 
                VertexNormalInputs VNI = GetVertexNormalInputs(float3(0.0,1.0,0.0), float4(1.0,0.0,0.0,1.0));
 
                OUT.normalWS = VNI.normalWS;
-               OUT.tangentWS = VNI.tangentWS;
-               OUT.bitangentWS = VNI.bitangentWS;
-
-               return OUT;
-            }
-
-            TessellationFactors PatchConstantFunction
-            (
-                InputPatch<TessellationControlPoint, 3> patch
-            )
-            {
-                UNITY_SETUP_INSTANCE_ID(patch[0]);
-                TessellationFactors f;
-                float dist = clamp(_PlayerDistance, 3.0, 5.0);
-                float val = 1.0 - (dist-3.0)/2.0;
-                float edgeFactor = lerp(_MinEdgeFactor, _MaxEdgeFactor, val);
-                float insideFactor = lerp(_MinInsideFactor, _MaxInsideFactor, val);
-                f.edge[0] = edgeFactor;
-                f.edge[1] = edgeFactor;
-                f.edge[2] = edgeFactor;
-                f.inside = insideFactor;
-                return f;
-            }
-
-            [domain("tri")]
-            [outputcontrolpoints(3)]
-            [outputtopology("triangle_cw")]
-            [patchconstantfunc("PatchConstantFunction")]
-            [partitioning("integer")]
-            TessellationControlPoint hull
-            (
-                InputPatch<TessellationControlPoint, 3> patch,
-                uint id : SV_OutputControlPointID
-            )
-            {
-                return patch[id];
-            }
-
-
-            #define BARYCENTRIC_INTERPOLATE(fieldName) \
-                patch[0].fieldName * barycentricCoordinates.x + \
-                patch[1].fieldName * barycentricCoordinates.y + \
-                patch[2].fieldName * barycentricCoordinates.z
-
-            [domain("tri")]
-            Varyings domain
-            (
-                TessellationFactors factors,
-                OutputPatch<TessellationControlPoint, 3> patch,
-                float3 barycentricCoordinates : SV_DomainLocation
-            )
-            {
-               Varyings OUT;
-
-               UNITY_SETUP_INSTANCE_ID(patch[0]);
-               UNITY_TRANSFER_INSTANCE_ID(patch[0], OUT);
-               UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO(OUT);
-
-               float2 UV = BARYCENTRIC_INTERPOLATE(UV);
-               float3 normalWS = patch[0].normalWS;
-               float3 tangentWS = patch[0].tangentWS;
-               float3 bitangentWS = patch[0].bitangentWS;
-
-               float3 offsetY = _ScaleFactor * normalWS * 0.5;
-               float offsetX = _TexelWidth * _ScaleFactor;
-               float offsetZ = _TexelHeight * _ScaleFactor;
-
-               float d = 1.0;
-               float3 height = offsetY * SAMPLE_TEXTURE2D_LOD(_BaseMap, sampler_BaseMap, UV, 0).g;
-               float3 heightx = offsetY * SAMPLE_TEXTURE2D_LOD(_BaseMap, sampler_BaseMap, UV - float2(_TexelWidth*d, 0), 0).g;
-               float3 heightz = offsetY * SAMPLE_TEXTURE2D_LOD(_BaseMap, sampler_BaseMap, UV + float2(0,_TexelHeight*d), 0).g;
-
-               float3 pos = BARYCENTRIC_INTERPOLATE(positionWS);
-               float3 positionWS =  pos + height;
-               float3 positionWSx = pos + tangentWS * offsetX + heightx;
-               float3 positionWSz = pos + bitangentWS * offsetZ + heightz;
-
-               float3 tangent = - positionWS + positionWSx; 
-               float3 bitangent = - positionWS + positionWSz; 
-
-               float3 newNormal = cross(tangent, bitangent);
-
-               OUT.positionCS = TransformWorldToHClip(positionWS);
-               OUT.normalWS = normalize(newNormal);
-               OUT.positionWS = positionWS;
-               OUT.UV = UV;
 
                return OUT;
             }

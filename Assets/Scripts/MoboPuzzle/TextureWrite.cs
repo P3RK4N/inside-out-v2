@@ -12,8 +12,8 @@ public class TextureWrite : MonoBehaviour
     public List<Vector4> edgesList;
     public GameObject chip;
 
-    static int texWidth =   140;
-    static int texHeight =  140;
+    static int texWidth =   200;
+    static int texHeight =  200;
 
     public static int X = 5;
     public static int Y = 5;
@@ -328,7 +328,7 @@ public class TextureWrite : MonoBehaviour
     void onConnected()
     {
         electricity = true;
-        rot.turnOn(150.0f);
+        rot?.turnOn(150.0f);
         successCount++;
         if(successCount < 3)
         {
