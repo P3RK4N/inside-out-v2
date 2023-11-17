@@ -15,8 +15,8 @@ public class TextureWrite : MonoBehaviour
     static int texWidth =   200;
     static int texHeight =  200;
 
-    public static int X = 5;
-    public static int Y = 5;
+    public static int X = 8;
+    public static int Y = 8;
     public static int Z = 1;
 
     RenderTexture weldTexture { get; set; }
@@ -98,7 +98,7 @@ public class TextureWrite : MonoBehaviour
         //Find PlayerTransform
         PlayerTransform = GameObject.Find("CenterEyeAnchor").transform;
 
-        weldTexture = new RenderTexture(texWidth, texHeight, 1, UnityEngine.Experimental.Rendering.GraphicsFormat.R16G16B16A16_SFloat);
+        weldTexture = new RenderTexture(texWidth, texHeight, 1, RenderTextureFormat.ARGBFloat, RenderTextureReadWrite.Linear);
         weldTexture.enableRandomWrite = true;
         weldTexture.filterMode = FilterMode.Point;
         weldTexture.Create();
